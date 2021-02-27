@@ -9,6 +9,7 @@ import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 
+    // instantiate MainViewModel
     private val viewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
@@ -16,12 +17,14 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentMainBinding.inflate(inflater)
+
+        // allows Data Binding to Observe LiveData with the LifeCycle of this Fragment
         binding.lifecycleOwner = this
 
+        // gives binding access to the MainViewModel
         binding.viewModel = viewModel
 
         setHasOptionsMenu(true)
-
         return binding.root
     }
 
