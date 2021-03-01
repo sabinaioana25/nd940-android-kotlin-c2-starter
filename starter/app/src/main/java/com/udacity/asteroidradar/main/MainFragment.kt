@@ -24,6 +24,7 @@ class MainFragment : Fragment() {
         // gives binding access to the MainViewModel
         binding.viewModel = viewModel
 
+
         setHasOptionsMenu(true)
         return binding.root
     }

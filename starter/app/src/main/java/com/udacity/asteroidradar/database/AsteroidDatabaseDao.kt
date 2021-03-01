@@ -1,24 +1,33 @@
 package com.udacity.asteroidradar.database
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.udacity.asteroidradar.Asteroid
 
 @Dao
 interface AsteroidDatabaseDao {
 
-    @Insert
-    fun insert(asteroid: Asteroid)
+    @Query("SELECT * FROM databaseasteroid")
+    fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
 
-    @Update
-    fun update(asteroid: Asteroid)
-
-    @Query("SELECT * FROM daily_asteroid_tracker_table WHERE id = :key")
-    fun get(key: Long): Asteroid
-
-    @Query("DELETE FROM daily_asteroid_tracker_table")
-    fun clear()
-
-    @Query("SELECT * FROM daily_asteroid_tracker_table ORDER BY id DESC ")
-    fun getAllAsteroids(): LiveData<List<Asteroid>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg asteroids: DatabaseAsteroid)
 }
+
+@Database(entities = [DatabaseAsteroid::class], version = 1)
+abstract class AsteroidsDatabase: RoomDatabase() {
+    abstract val asteroidDatabaseDao: AsteroidDatabaseDao
+}
+
+private lateinit var INSTANCE: AsteroidsDatabase
+fun getDatabase(context: Context): AsteroidsDatabase {
+    synchronized(AsteroidsDatabase::class.java) {
+        if (!::INSTANCE.isInitialized) {
+            INSTANCE = Room.databaseBuilder(context.applicationContext,
+                    AsteroidsDatabase::class.java, "asteroids"
+            ).build()
+        }
+        return INSTANCE
+    }
+}
+

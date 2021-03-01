@@ -3,11 +3,15 @@ package com.udacity.asteroidradar.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.AsteroidApi
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.lang.Exception
 
 class MainViewModel : ViewModel() {
 
@@ -21,8 +25,8 @@ class MainViewModel : ViewModel() {
     // call getAsteroidsFromRequest() on init so I can display status immediately
 
 //    private val _responsePod = MutableLiveData<String>()
-    private val _responseApod = MutableLiveData<String>()
-    val responseApod: LiveData<String>
+    private val _responseApod = MutableLiveData<PictureOfDay>()
+    val responseApod: LiveData<PictureOfDay>
         get() = _responseApod
 
     init {
@@ -34,27 +38,25 @@ class MainViewModel : ViewModel() {
         AsteroidApi.retrofitService.getAsteroidProperties().enqueue(object: Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 _response.value = response.body()
-//                Timber.i(_response.value)
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
                 _response.value = "Failure: " + t.message
             }
         })
-//        _response.value = "Set Nasa APOD response here"
     }
 
     private fun getAsteroidApodRequest() {
-        AsteroidApi.retrofitServicePod.getAsteroidApod().enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                _responseApod.value = response.body()
+        viewModelScope.launch {
+            var getApod = AsteroidApi.retrofitServicePod.getAsteroidApod()
+            try {
+                var imgResult = getApod
+                if (imgResult != null) {
+                    _responseApod.value =  imgResult
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                _responseApod.value = "Failure: " + t.message
-            }
-        })
-
-        Timber.i(_responseApod.value)
+        }
     }
 }

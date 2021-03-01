@@ -19,14 +19,15 @@ data class Asteroid(
                 val closeApproachDate: String,
 
     @ColumnInfo(name = "absolute_magnitude")
-                val absoluteMagnitude: Double, val estimatedDiameter: Double,
+                val absoluteMagnitude: Double,
+    val estimatedDiameter: Double,
 
     @ColumnInfo(name = " relative_velocity")
                 val relativeVelocity: Double,
 
     @ColumnInfo(name = "distance_from_earth")
-    val distanceFromEarth: Double,
+                val distanceFromEarth: Double,
 
     @ColumnInfo(name = "is_potentially_hazardous")
-    val isPotentiallyHazardous: Boolean)
+                val isPotentiallyHazardous: Boolean)
     : Parcelable

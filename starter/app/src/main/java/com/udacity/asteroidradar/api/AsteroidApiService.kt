@@ -32,7 +32,7 @@ private val moshi = Moshi.Builder()
 private val retrofitPod = Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())
         .baseUrl(BASE_URL)
-//        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
 // implement the AsteroidApiService with @GET returning String
@@ -44,8 +44,8 @@ interface AsteroidApiService {
             Call<String>
 
     @GET(IMAGE_MID_URL + PARAM_API_KEY + API_KEY_VALUE)
-    fun getAsteroidApod():
-            Call<String>
+    suspend fun getAsteroidApod():
+           PictureOfDay
 }
 
 // create the AsteroidApi object using retrofit to implement the AsteroidApiService
