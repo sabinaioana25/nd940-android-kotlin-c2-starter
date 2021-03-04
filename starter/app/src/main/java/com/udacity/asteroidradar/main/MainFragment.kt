@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -23,7 +24,6 @@ class MainFragment : Fragment() {
 
         // gives binding access to the MainViewModel
         binding.viewModel = viewModel
-
 
         setHasOptionsMenu(true)
         return binding.root
